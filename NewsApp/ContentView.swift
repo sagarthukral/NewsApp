@@ -26,16 +26,7 @@ struct ContentView: View {
             
             List {
                 
-                Section() {
-                    VStack {
-                        Divider().background(Color.black)
-                        Marque(text:list.datas.map({$0.desc + ": " + $0.source}).joined(separator: "  ||  ")).padding(.bottom, 10)
-                        
-                        Divider().background(Color.black)
-
-                    }
-                }
-                Section() {
+                Section(header: ListHeader(listData: self.list.datas)) {
                     ForEach(list.datas) { i in
                         
                         NavigationLink(
@@ -50,18 +41,31 @@ struct ContentView: View {
                                     WebImage(url: URL(string: i.image), options: .highPriority, context: nil).resizable().frame(width: 100, height: 120).cornerRadius(15)
                                 }
                                 
-                            }.padding(.vertical, 15)
+                            }.padding(.all, 15)
                         }
                         
                     }
                 }
                 
-            }.navigationBarTitle("Live News")
+            }.padding(-15.0).navigationBarTitle("Live News")
             
         }
 
     }
 }
+
+struct ListHeader: View {
+    var listData = [dataType]()
+    var body: some View {
+        VStack {
+            Divider().background(Color.black)
+            Marque(text:listData.map({$0.desc + ": " + $0.source}).joined(separator: "  ||  ")).padding(.bottom, 10)
+            
+            Divider().background(Color.black)
+        }.background(Color.white)
+    }
+}
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
@@ -137,6 +141,7 @@ struct Marque: View {
             ScrollView(.horizontal, showsIndicators: false, content: {
                 Text(text)
                     .lineLimit(1).foregroundColor(.red)
+                    .background(Color.white)
                     .background(GeometryGetter(rect: $textFrame)).offset(moveView ? CGSize(width: -1 * textFrame.width, height: 0) : CGSize(width: proxy.size.width, height: 0))
                 .onAppear() {
                     self.stopAnimation = false
@@ -146,7 +151,7 @@ struct Marque: View {
                     self.stopAnimation = true
                 }
             })
-            .padding([.top, .bottom], 5)
+            .padding([ .bottom], 10)
         }
     }
     private func animateView() {
